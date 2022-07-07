@@ -1,4 +1,6 @@
 import cv2 as cv
+import winsound
+
 camera = cv.VideoCapture(0)
 
 if not camera.isOpened():
@@ -16,11 +18,12 @@ while True:
     dilation = cv.dilate(threshold, None, iterations=3)
     bound, _ = cv.findContours(dilation, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     for movement in bound:
-        if cv.contourArea(movement) < 1200:
+        if cv.contourArea(movement) < 3000:
             continue
         else:
             x_axis, y_axis, width, height = cv.boundingRect(movement)
             cv.rectangle(frame, (x_axis, y_axis), (x_axis+width, y_axis+height), (255, 0, 50), 2)
+            winsound.Beep(500, 200)
     if not ret:
         print("Cant receive frame. Exiting...")
         break
