@@ -1,7 +1,7 @@
 import cv2 as cv
 import winsound
 import os
-import face_recognition_models
+import face_recognition
 
 FAMILIAR_FACES_DIR = 'knownfaces'
 STRANGERS = "unkownfaces"
@@ -15,20 +15,20 @@ names = []
 
 for name in os.listdir(FAMILIAR_FACES_DIR):
     for filename in os.listdir(f"{FAMILIAR_FACES_DIR}"):
-        image = face_recognition_models.load_image_file(f"{FAMILIAR_FACES_DIR}/{name}/{filename}")
-        encoding = face_recognition_models.face_encodings(image)[0]
+        image = face_recognition.load_image_file(f"{FAMILIAR_FACES_DIR}/{name}/{filename}")
+        encoding = face_recognition.face_encodings(image)[0]
         known.append(encoding)
         names.append(name)
 
 for file in os.listdir(STRANGERS):
     print(file)
-    image = face_recognition_models.load_image_file(f"{STRANGERS}/{file}")
-    locations = face_recognition_models.face_locations(image, model=model)
-    encodings = face_recognition_models.face_encodings(image, locations)
+    image = face_recognition.load_image_file(f"{STRANGERS}/{file}")
+    locations = face_recognition.face_locations(image, model=model)
+    encodings = face_recognition.face_encodings(image, locations)
     image = cv.cvtColor(image, cv.COLOR_RGB2BGR)
 
     for face_encoding, face_location in zip(encodings, locations):
-        results = face_recognition_models.compare_faces(known, face_encoding, DEGREE)
+        results = face_recognition.compare_faces(known, face_encoding, DEGREE)
         match = None
         if True in results:
             match = known[results.index(True)]
